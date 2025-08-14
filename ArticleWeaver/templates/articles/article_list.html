@@ -1,78 +1,57 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <title>Știri Sportive</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            max-width: 1000px;
-            margin: auto;
-            padding: 20px;
-        }
-        h1 {
-            color: #d40000;
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-        }
-        article {
-            background: white;
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-        article img {
-            width: 250px;
-            height: 160px;
-            object-fit: cover;
-        }
-        .article-content {
-            padding: 15px;
-            flex: 40;
-        }
-        .article-content h2 {
-            color: #222;
-            font-size: 1.4em;
-            margin-top: 0;
-        }
-        .article-content h2 a {
-            text-decoration: none;
-            color: #d40000;
-        }
-        .article-content h2 a:hover {
-            text-decoration: underline;
-        }
-        time {
-            color: gray;
-            font-size: 0.9em;
-            display: block;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #333;
-            line-height: 1.5;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ultimele Știri Sportive</h1>
-    {% for article in articles %}
-        <article>
-            <img src="{{ article.image_url }}" alt="{{ article.title }}">
-            <div class="article-content">
-                <h2><a href="{% url 'article_detail' category=article.category slug=article.slug %}">{{ article.title }}</a></h2>
-                <time>{{ article.published_at|date:"d M Y H:i" }}</time>
-                <p>{{ article.content|truncatewords:30 }}</p>
-            </div>
-        </article>
-    {% empty %}
-        <p>Nu există articole disponibile.</p>
-    {% endfor %}
-</body>
-</html>
+{% extends "articles/base.html" %}
+{% block title %}Ultimele Știri Sportive{% endblock %}
+
+{% block content %}
+
+{% if hero %}
+<div class="row g-4 align-items-stretch mb-4">
+  <div class="col-lg-7">
+    {% if hero.image_url %}
+      <img src="{{ hero.image_url }}" class="w-100 rounded-3" style="height:420px; object-fit:cover" alt="">
+    {% endif %}
+  </div>
+  <div class="col-lg-5">
+    <div class="bg-white rounded-3 p-4 shadow-sm h-100">
+      <a class="title-link" href="{% url 'article_detail' hero.category hero.slug %}">
+        <h2 class="fw-bold">{{ hero.title }}</h2>
+      </a>
+      <div class="text-muted small mb-2">{{ hero.published_at|date:"d M Y H:i" }}</div>
+      <p class="mb-0">{{ hero.summary|default:hero.content|truncatewords:40 }}</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<h3 class="fw-bold mb-3">Ultimele știri</h3>
+<div class="row g-4">
+  {% for a in articles %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      {% if a.image_url %}<img src="{{ a.image_url }}" class="card-img-top" alt="">{% endif %}
+      <div class="card-body">
+        <a class="title-link" href="{% url 'article_detail' a.category a.slug %}">
+          <h5 class="card-title">{{ a.title }}</h5>
+        </a>
+        <p class="text-muted small mb-1">{{ a.published_at|date:"d M Y H:i" }}</p>
+        <p class="card-text">{{ a.summary|default:a.content|truncatewords:22 }}</p>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <p>Nu există articole publicate.</p>
+  {% endfor %}
+</div>
+
+<nav class="mt-4">
+  <ul class="pagination">
+    {% if articles.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ articles.previous_page_number }}">Înapoi</a></li>
+    {% endif %}
+    <li class="page-item active"><span class="page-link">{{ articles.number }}</span></li>
+    {% if articles.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ articles.next_page_number }}">Înainte</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}
