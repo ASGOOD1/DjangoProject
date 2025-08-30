@@ -1,6 +1,6 @@
-SportsHub
+SportzRo
 
-SportsHub is a Django-based web platform inspired by popular sports news portals (like sport.ro). It provides the latest news, live updates and multimedia content from the world of sports. The project is built with scalability, clean architecture, and easy content management in mind.
+SportzRo is a Django-based web platform inspired by popular sports news portals (like sport.ro). It provides the latest news, live updates and multimedia content from the world of sports. The project is built with scalability, clean architecture, and easy content management in mind.
 
 Features
 
@@ -18,4 +18,4 @@ Tech Stack
 
 - Database: SQLite 
 
-- Frontend: HTML5, CSS3, JavaScript (Bootstrap/Tailwind optional)
+- Frontend: HTML5, CSS3, Bootstrap
